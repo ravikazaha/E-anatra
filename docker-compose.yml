@@ -1,0 +1,14 @@
+services:
+  server:
+    build: .
+    volumes:
+      - './dist:/home/node/code'
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: Postgres2468952*
