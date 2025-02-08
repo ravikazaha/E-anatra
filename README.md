@@ -86,5 +86,11 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 
 ## Docker
 If you use Docker
+
+```bash
+# build image
 $ docker compose build
-$ docker compose up
+
+# run container 
+$ docker compose run
+```
