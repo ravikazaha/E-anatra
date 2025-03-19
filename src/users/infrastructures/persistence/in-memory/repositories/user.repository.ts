@@ -21,4 +21,23 @@ export class InMemoryUserRepository implements UserRepository {
 
     return UserMapper.toDomain(newEntity);
   }
+
+  async findByEmail(email: string): Promise<User> {
+    const entites = Array.from(this.users.values());
+    return UserMapper.toDomain(
+      entites.find((entity) => entity.email === email),
+    );
+  }
+
+  async findById(userId: string): Promise<User> {
+    const entites = Array.from(this.users.values());
+    return UserMapper.toDomain(entites.find((entity) => entity.id === userId));
+  }
+
+  async findByUsername(username: string): Promise<User> {
+    const entites = Array.from(this.users.values());
+    return UserMapper.toDomain(
+      entites.find((entity) => entity.username === username),
+    );
+  }
 }

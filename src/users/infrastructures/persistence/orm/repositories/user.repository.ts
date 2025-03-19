@@ -26,4 +26,31 @@ export class OrmUserRepository implements UserRepository {
 
     return UserMapper.toDomain(entity);
   }
+
+  async findByEmail(email: string): Promise<User> {
+    try {
+      const entity = await this.userRepository.findOneBy({ email });
+      return UserMapper.toDomain(entity);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async findById(userId: string): Promise<User> {
+    try {
+      const entity = await this.userRepository.findOneBy({ id: userId });
+      return UserMapper.toDomain(entity);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async findByUsername(username: string): Promise<User> {
+    try {
+      const entity = await this.userRepository.findOneBy({ username });
+      return UserMapper.toDomain(entity);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }
