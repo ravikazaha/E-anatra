@@ -11,9 +11,7 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-      POSTGRES_USER: ${DATABASE_USER}
-      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_PASSWORD: ${DATABASE_ROOT_PASSWORD}
     volumes:
     - e-learning-db:/var/lib/postgresql/data
 
