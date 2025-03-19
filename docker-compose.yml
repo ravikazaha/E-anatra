@@ -15,7 +15,12 @@ services:
       interval: 10s
       retries: 5
   server:
-    build: .
+    build: 
+      context: .
+      dockerfile: ${DOCKER_FILE}
+    volumes:
+      - .:/home/node/code
+      - /home/node/code/node_modules
     ports:
       - "3000:3000"
     env_file:
