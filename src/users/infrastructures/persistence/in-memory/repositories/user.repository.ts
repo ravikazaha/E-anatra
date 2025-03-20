@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepository } from 'src/users/application/ports/user.repository';
+import {
+  UserFieldName,
+  UserRepository,
+} from 'src/users/application/ports/user.repository';
 import { User } from 'src/users/domain/user';
 import { UserMapper } from '../mappers/user.mapper';
 import { UserEntity } from '../entities/user-entity';
@@ -39,5 +42,20 @@ export class InMemoryUserRepository implements UserRepository {
     return UserMapper.toDomain(
       entites.find((entity) => entity.username === username),
     );
+  }
+
+  async findOneBy(fieldName: Partial<UserFieldName>): Promise<User | null> {
+    const entities = Array.from(this.users.values());
+    const entries = Object.entries(fieldName);
+
+    if (!entries.length) {
+      throw new Error('No field provided for findOneBy');
+    }
+
+    const foundEntity = entities.find((entity) =>
+      entries.every(([key, value]) => entity[key] === value),
+    );
+
+    return foundEntity ? UserMapper.toDomain(foundEntity) : null;
   }
 }

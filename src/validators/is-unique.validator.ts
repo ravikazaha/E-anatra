@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   registerDecorator,
   ValidationArguments,
@@ -11,7 +11,11 @@ import { UserRepository } from 'src/users/application/ports/user.repository';
 @ValidatorConstraint({ name: 'isUnique', async: true })
 @Injectable()
 export class IsUniqueValidator implements ValidatorConstraintInterface {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    @Inject(UserRepository) private readonly userRepository: UserRepository,
+  ) {
+    console.log('[UserRepository in constructor]', this.userRepository);
+  }
 
   async validate(
     value: any,

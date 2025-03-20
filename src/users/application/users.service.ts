@@ -16,6 +16,8 @@ export class UsersService {
         createUserCommand.email,
         createUserCommand.password,
       )
+      .withFirstName(createUserCommand.firstName)
+      .withLastName(createUserCommand.lastName)
       .build();
 
     return this.userRepository.save(user);

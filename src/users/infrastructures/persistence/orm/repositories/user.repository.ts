@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserRepository } from 'src/users/application/ports/user.repository';
+import {
+  UserFieldName,
+  UserRepository,
+} from 'src/users/application/ports/user.repository';
 import { UserEntity } from '../entities/user-entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/domain/user';
@@ -49,6 +52,15 @@ export class OrmUserRepository implements UserRepository {
     try {
       const entity = await this.userRepository.findOneBy({ username });
       return UserMapper.toDomain(entity);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async findOneBy(fieldName: Partial<UserFieldName>): Promise<User> {
+    try {
+      const entity = await this.userRepository.findOneBy(fieldName);
+      return entity ? UserMapper.toDomain(entity) : null;
     } catch (error) {
       throw new Error(error);
     }
