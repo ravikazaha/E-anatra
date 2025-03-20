@@ -22,7 +22,7 @@ services:
       - .:/home/node/code
       - /home/node/code/node_modules
     ports:
-      - "3000:3000"
+      - "${APP_PORT}:3000"
     env_file:
       - .env
     networks:

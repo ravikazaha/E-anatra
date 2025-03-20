@@ -1,6 +1,8 @@
-FROM node AS builder
+FROM node:20.19.0 AS builder
 
 WORKDIR /home/node/code
+
+RUN npm install -g npm@11.2.0
 
 COPY package-lock.json package.json ./
 
@@ -10,7 +12,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node
+FROM node:20.19.0 AS production
 
 COPY --from=builder /home/node/code/dist ./dist
 
