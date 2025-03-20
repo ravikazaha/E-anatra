@@ -1,12 +1,39 @@
-version: '3.8'
-
 services:
-  server:
-    command: npm run dev:start
-    volumes:
-      - ./src:/home/node/code
-      - /home/node/code/node_modules
+  dev_db:
+    image: postgres
+    restart: always
     environment:
-      - NODE_ENV=developement
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    volumes:
+      - dev_db:/var/lib/postgresql/data
+    networks:
+      - dev_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_DATABASE}"]
+      interval: 10s
+      retries: 5
+  dev_server:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/home/node/code
+      - /home/node/code/node_modules
     ports:
       - "3000:3000"
+    env_file:
+      - .env.dev
+    networks:
+      - dev_network
+    depends_on:
+      dev_db:
+        condition: service_healthy
+
+networks:
+  dev_network:
+    driver: bridge
+
+volumes:
+  dev_db:

@@ -1,11 +1,38 @@
-version: '3.8'
-
 services:
-  server:
-    command: npm start  # Use production start script
-    volumes:
-      - /home/node/code/node_modules  # Only keep node_modules volume if needed
+  prod_db:
+    image: postgres
+    restart: always
     environment:
-      - NODE_ENV=production
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    volumes:
+      - prod_db:/var/lib/postgresql/data
+    networks:
+      - prod_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_DATABASE}"]
+      interval: 10s
+      retries: 5
+    env_file:
+      - .env.prod
+  prod_server:
+    build: 
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "80:3000"  # Expose port 80 on host, map to 3000 in container
+      - "80:3000"
+    env_file:
+      - .env.prod
+    networks:
+      - prod_network
+    depends_on:
+      prod_db:
+        condition: service_healthy
+
+networks:
+  prod_network:
+    driver: bridge
+
+volumes:
+  prod_db:
