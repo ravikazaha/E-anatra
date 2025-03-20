@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  server:
+    command: npm start  # Use production start script
+    volumes:
+      - /home/node/code/node_modules  # Only keep node_modules volume if needed
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "80:3000"  # Expose port 80 on host, map to 3000 in container
