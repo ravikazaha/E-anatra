@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/application/users.module';
 import { CoreModule } from './core/core.module';
@@ -14,8 +12,6 @@ import { UserInfrastructureModule } from './users/infrastructures/user-infrastru
     }),
     CoreModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {
   static register(option: ApplicationBootstrapOptions) {
