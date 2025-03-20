@@ -1,5 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
-import { IsUnique } from 'src/users/common/validators/is-unique.validator';
+import { IsUnique } from 'src/common/validators/is-unique.validator';
 
 export class CreateUserDto {
   @IsString()

@@ -4,6 +4,7 @@ import { UsersModule } from './users/application/users.module';
 import { CoreModule } from './core/core.module';
 import { ApplicationBootstrapOptions } from './common/interfaces/application-bootstrap-option.interface';
 import { UserInfrastructureModule } from './users/infrastructures/user-infrastructure.module';
+import { IamModule } from './iam/applications/iam.module';
 
 @Module({
   imports: [
@@ -20,6 +21,9 @@ export class AppModule {
       imports: [
         CoreModule.forRoot(option),
         UsersModule.withInfrastructure(
+          UserInfrastructureModule.use(option.driver),
+        ),
+        IamModule.withInfrastructure(
           UserInfrastructureModule.use(option.driver),
         ),
       ],
