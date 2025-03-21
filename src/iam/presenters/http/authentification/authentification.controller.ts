@@ -11,7 +11,10 @@ import { SignUpDto } from '../dto/sign-up.dto';
 import { SignUpCommand } from 'src/iam/applications/authentification/commands/sign-up.command';
 import { SignInDto } from '../dto/sign-in.dto';
 import { SignInCommand } from 'src/iam/applications/authentification/commands/sign-in.command';
+import { Auth } from 'src/iam/applications/authentification/decorators/auth.decorator';
+import { AuthType } from 'src/iam/applications/authentification/enums/auth-type.enum';
 
+@Auth(AuthType.None)
 @Controller('authentification')
 export class AuthentificationController {
   constructor(
