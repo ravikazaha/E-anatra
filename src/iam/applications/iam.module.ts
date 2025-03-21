@@ -10,6 +10,8 @@ import { UserBuilderImpl } from 'src/users/domain/factories/user.builderImpl';
 import { JwtModule } from '@nestjs/jwt';
 import jwtConfig from '../config/jwt.config';
 import { ConfigModule } from '@nestjs/config';
+import { AccessTokenGuard } from './authentification/guards/access-token/access-token.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -27,6 +29,10 @@ import { ConfigModule } from '@nestjs/config';
     {
       provide: UserBuilder,
       useClass: UserBuilderImpl,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AccessTokenGuard,
     },
   ],
   controllers: [AuthentificationController],
