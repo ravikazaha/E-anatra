@@ -1,9 +1,12 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserRepository } from 'src/users/application/ports/user.repository';
 import { HashingService } from '../hashing/hashing.service';
 import { SignUpCommand } from './commands/sign-up.command';
 import { UserBuilder } from 'src/users/domain/factories/user.builder';
 import { SignInCommand } from './commands/sign-in.command';
+import { JwtService } from '@nestjs/jwt';
+import jwtConfig from 'src/iam/config/jwt.config';
+import { ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class AuthentificationService {
@@ -11,6 +14,9 @@ export class AuthentificationService {
     private readonly usersRepository: UserRepository,
     private readonly hashingService: HashingService,
     private readonly userBuilder: UserBuilder,
+    private readonly jwtService: JwtService,
+    @Inject(jwtConfig.KEY)
+    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
   ) {}
 
   async signUp(signUpCommand: SignUpCommand) {
@@ -36,6 +42,7 @@ export class AuthentificationService {
       });
 
       if (!user) throw new UnauthorizedException('Credential Error');
+
       const isEqual = await this.hashingService.compare(
         signInCommand.password,
         user.password,
@@ -43,7 +50,20 @@ export class AuthentificationService {
 
       if (!isEqual) throw new UnauthorizedException('Credential Error');
 
-      return true;
+      const accessToken = await this.jwtService.signAsync(
+        {
+          sub: user.id,
+          email: user.email,
+        },
+        {
+          audience: this.jwtConfiguration.audience,
+          issuer: this.jwtConfiguration.issuer,
+          secret: this.jwtConfiguration.secret,
+          expiresIn: this.jwtConfiguration.accessTokenTtl,
+        },
+      );
+
+      return { accessToken };
     } catch (error) {
       throw error;
     }

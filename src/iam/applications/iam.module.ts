@@ -7,8 +7,15 @@ import { AuthentificationService } from './authentification/authentification.ser
 import { IsUniqueValidator } from 'src/common/validators/is-unique.validator';
 import { UserBuilder } from 'src/users/domain/factories/user.builder';
 import { UserBuilderImpl } from 'src/users/domain/factories/user.builderImpl';
+import { JwtModule } from '@nestjs/jwt';
+import jwtConfig from '../config/jwt.config';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
+  imports: [
+    JwtModule.registerAsync(jwtConfig.asProvider()),
+    ConfigModule.forFeature(jwtConfig),
+  ],
   providers: [
     AuthentificationService,
     MatchValidator,
